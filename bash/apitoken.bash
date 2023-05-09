@@ -165,10 +165,3 @@ else
         fi
 fi
 rm -f $tmpfile
-
-## runs every file ending with .sh in the /scripts folder
-#SCRIPTS=/scripts/*.sh
-#for f in $SCRIPTS
-#do
-#        sh "$f"
-#done
