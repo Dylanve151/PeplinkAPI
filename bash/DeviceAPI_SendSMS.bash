@@ -18,10 +18,19 @@ tmpfile="/tmp/ic2.tmpfile.$$"
 
 curl_opt=" -k "
 
+echo "Checking monthly allowance..."
+curl $curl_opt -so $tmpfile --data "${token_params}" "${api_server_prefix}/api/status.wan.connection.allowance"
+
 token_params="accessToken=${access_token}"
 sendsms_params="&connId=${connid}&address=${smsnumber}&content=${smsmessage}"
 
 curl $curl_opt -so $tmpfile --data "${token_params}${sendsms_params}" "${api_server_prefix}/api/cmd.sms.sendMessage"
+
+if grep -q Unauthorized $tmpfile ; then
+      echo "The saved access token is invalid."
+      rm -f ${access_token_file}
+      exit 7
+fi
 
 stat=$(jq -r ".stat" $tmpfile)
 if [ "${stat}" == "ok" ]
