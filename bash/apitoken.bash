@@ -20,7 +20,7 @@
 
 export $(cat .env)
 
-# For InControl 2, the api_server_prefix is https://api.ic.peplink.com.
+# For InControl 2, the server_prefix is https://api.ic.peplink.com.
 # For InControl appliances, this is https://{SERVER_NAME_HERE}.
 if [ -z "$server_prefix" ]
 then
@@ -51,12 +51,12 @@ access_token_file="${HOME}/.access_token"
 refresh_token_file="${HOME}/.refresh_token"
 tmpfile="/tmp/ic2.tmpfile.$$"
 if [ "${server_type}" == "device" ]; then
-        ic2_token_url="${api_server_prefix}/api/auth.token.grant"
+        ic2_token_url="${server_prefix}/api/auth.token.grant"
 else
         # InControl token endpoint
-        ic2_token_url="${api_server_prefix}/api/oauth2/token"
+        ic2_token_url="${server_prefix}/api/oauth2/token"
         # InControl authorization endpoint
-        ic2_auth_url="${api_server_prefix}/api/oauth2/auth?client_id=${client_id}&response_type=code"
+        ic2_auth_url="${server_prefix}/api/oauth2/auth?client_id=${client_id}&response_type=code"
 
         if [ "${client_id}" == "" ] || [ "${client_secret}" == "" ]; then
                 echo "Please enter Client ID and Client Secret"
