@@ -24,7 +24,7 @@ export $(cat .env)
 # For InControl appliances, this is https://{SERVER_NAME_HERE}.
 if [ -z "$server_prefix" ]
 then
-        if [ "${api_type}" == "device" ]
+        if [ "${server_type}" == "device" ]
         then
                 server_prefix="http://192.168.50.1"
         else
@@ -39,7 +39,7 @@ fi
 
 # For InControl 2, set 1 to verify the API service's SSL certificate.
 # For InControl appliances without a valid SSL certificate, set this to 0 to ignore the certificate validity.
-if [ "${api_type}" == "device" ]
+if [ "${server_type}" == "device" ]
 then
         verify_ssl_cert=0
 else
@@ -50,7 +50,7 @@ fi
 access_token_file="${HOME}/.access_token"
 refresh_token_file="${HOME}/.refresh_token"
 tmpfile="/tmp/ic2.tmpfile.$$"
-if [ "${api_type}" == "device" ]; then
+if [ "${server_type}" == "device" ]; then
         ic2_token_url="${api_server_prefix}/api/auth.token.grant"
 else
         # InControl token endpoint
@@ -82,7 +82,7 @@ else
         curl_opt=""
 fi
 
-if [ "${api_type}" == "device" ]; then
+if [ "${server_type}" == "device" ]; then
         function save_tokens() {
                 result=$(jq -r .response)
                 local -n access_token_tmp=$1
@@ -132,7 +132,7 @@ elif [ -f ${refresh_token_file} ] && [ $(stat -c %Y ${refresh_token_file}) -gt $
                 exit 4
         fi
 else
-        if [ "${grant_type}" == "authorization_code" ] && [ "${api_type}" != "device" ]; then
+        if [ "${grant_type}" == "authorization_code" ] && [ "${server_type}" != "device" ]; then
                 echo ""
                 echo "Start a web browser, visit the following URL and follow the instructions."
                 echo ""
@@ -150,7 +150,7 @@ else
                 ic2_token_params="client_id=${client_id}&client_secret=${client_secret}&grant_type=authorization_code&code=${code}&redirect_uri=${redirect_uri}"
         ## No interaction needed
         else
-                if [ "${api_type}" == "device" ]; then
+                if [ "${server_type}" == "device" ]; then
                         ic2_token_params="clientId=${client_id}&clientSecret=${client_secret}&scope=api"
                 else
                         ic2_token_params="client_id=${client_id}&client_secret=${client_secret}&grant_type=client_credentials"
