@@ -5,8 +5,9 @@
 ## By Billy Lau, Michael Chan
 
 ## Modified by Dylan
-## Last modified: 2020-11-17
+## Last modified: 2023-05-09
 ## Modification: Modified for docker and also works with device API.
+## Modification2: Updated the script.
 
 #
 ## Please input your InControl 2 OAuth client_id, client_secret and redirect_uri below
@@ -19,17 +20,16 @@
 
 export $(cat .env)
 
-#if [ -f "/root/.apiclient" ]
-#then
-#        client_id=$(sed -n 1p /root/.apiclient)
-#        client_secret=$(sed -n 2p /root/.apiclient)
-#fi
-
 # For InControl 2, the api_server_prefix is https://api.ic.peplink.com.
 # For InControl appliances, this is https://{SERVER_NAME_HERE}.
 if [ -z "$server_prefix" ]
 then
         server_prefix="https://api.ic.peplink.com"
+fi
+
+if [ -z "$redirect_uri" ]
+then
+        redirect_uri="http://peplink.com"
 fi
 
 # For InControl 2, set 1 to verify the API service's SSL certificate.
