@@ -24,7 +24,12 @@ export $(cat .env)
 # For InControl appliances, this is https://{SERVER_NAME_HERE}.
 if [ -z "$server_prefix" ]
 then
-        server_prefix="https://api.ic.peplink.com"
+        if [ "${api_type}" == "device" ]
+        then
+                server_prefix="http://192.168.50.1"
+        else
+                server_prefix="https://api.ic.peplink.com"
+        fi
 fi
 
 if [ -z "$redirect_uri" ]
@@ -34,7 +39,8 @@ fi
 
 # For InControl 2, set 1 to verify the API service's SSL certificate.
 # For InControl appliances without a valid SSL certificate, set this to 0 to ignore the certificate validity.
-if [ "${api_type}" == "device" ]; then
+if [ "${api_type}" == "device" ]
+then
         verify_ssl_cert=0
 else
         verify_ssl_cert=1
