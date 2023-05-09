@@ -2,6 +2,8 @@
 ## Example of device API call script
 ## GPS logging to csv
 
+export $(cat .env)
+
 # please change these variables
 templogfile=./gpslog.csv
 
@@ -11,7 +13,6 @@ access_token=$(cat ${access_token_file})
 
 tmpfile="/tmp/ic2.tmpfile.$$"
 
-api_server_prefix=$(cat /verbs/api_server_prefix)
 curl_opt=" -k "
 
 echo "Logging GPS..."
@@ -20,7 +21,7 @@ token_params="accessToken=${access_token}"
 curl $curl_opt -so $tmpfile --data "${token_params}" "${api_server_prefix}/api/info.location"
 reqstat=$(jq -r '.stat' $tmpfile)
 if grep -q Unauthorized $tmpfile ; then
-	echo "The saved access token is invalid.  Rerun this script to obtain a new one"
+	echo "The saved access token is invalid."
 	rm -f ${access_token_file}
 	exit 7
 fi
