@@ -2,6 +2,8 @@
 ## Example of API call script
 ## GPS and temperature logging to csv
 
+export $(cat .env)
+
 # please change these variables
 templogfile=./templog.csv
 org_id=""
@@ -13,7 +15,6 @@ access_token=$(cat ${access_token_file})
 
 tmpfile="/tmp/ic2.tmpfile.$$"
 
-api_server_prefix=$(cat /verbs/api_server_prefix)
 if [ -z "$api_server_prefix" ]
 then
         api_server_prefix="https://api.ic.peplink.com"
