@@ -19,11 +19,11 @@
 
 export $(cat .env)
 
-if [ -f "/root/.apiclient" ]
-then
-        client_id=$(sed -n 1p /root/.apiclient)
-        client_secret=$(sed -n 2p /root/.apiclient)
-fi
+#if [ -f "/root/.apiclient" ]
+#then
+#        client_id=$(sed -n 1p /root/.apiclient)
+#        client_secret=$(sed -n 2p /root/.apiclient)
+#fi
 
 # For InControl 2, the api_server_prefix is https://api.ic.peplink.com.
 # For InControl appliances, this is https://{SERVER_NAME_HERE}.
