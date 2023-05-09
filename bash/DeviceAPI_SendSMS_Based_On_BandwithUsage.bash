@@ -2,6 +2,8 @@
 ## Example of device API call script
 ## Send sms when bandwith allawance hits cetain percentage
 
+export $(cat .env)
+
 # please change these variables
 smsnumber="1280"
 smsmessage="NOG 1GB"
@@ -16,7 +18,6 @@ access_token=$(cat ${access_token_file})
 
 tmpfile="/tmp/ic2.tmpfile.$$"
 
-api_server_prefix=$(cat /verbs/api_server_prefix)
 curl_opt=" -k "
 
 token_params="accessToken=${access_token}"
@@ -27,7 +28,7 @@ echo "Checking monthly allowance..."
 curl $curl_opt -so $tmpfile --data "${token_params}" "${api_server_prefix}/api/status.wan.connection.allowance"
 
 if grep -q Unauthorized $tmpfile ; then
-      echo "The saved access token is invalid.  Rerun this script to obtain a new one"
+      echo "The saved access token is invalid."
       rm -f ${access_token_file}
       exit 7
 fi
