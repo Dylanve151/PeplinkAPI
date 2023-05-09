@@ -1,0 +1,30 @@
+# PeplinkAPI
+Gives a error when openai is loading response.
+
+## Running locally Python
+
+```bash
+pip install 
+```
+
+Copy `.env.example` to `.env` and replace variables in the file
+* API_ClientID=
+* API_ClientSecret=
+* API_GrantType=**client_credentials** or **authorization_code** (Default: **client_credentials** (requires no interaction))
+
+### Optional:
+
+* API_RedirectUri=For example: https://peplink.com (Only required when using **authorization_code** (requires interaction))
+* API_clienttype=**device** or **ic2** (Default: **ic2** when using incontrol2 api. **device** when using device api.)
+* api_server_prefix=By default https://api.ic.peplink.com for use with https://incontrol2.peplink.com
+
+```bash
+python ./apitoken.py
+```
+
+## Running in Docker
+
+```bash
+docker build --tag dylanve151/PeplinkAPI .
+docker run -d dylanve151/PeplinkAPI
+```
