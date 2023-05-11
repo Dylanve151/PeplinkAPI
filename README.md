@@ -22,7 +22,7 @@ Copy `.env.example` to `.env` and replace variables in the file
 ./bash/apitoken.bash
 ```
 
-
+<!--
 ## Running locally Python
 
 ```bash
@@ -51,3 +51,4 @@ python ./python/apitoken.py
 docker build --tag dylanve151/PeplinkAPI .
 docker run -d dylanve151/PeplinkAPI
 ```
+-->
