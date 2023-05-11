@@ -1,4 +1,4 @@
-# PeplinkAPI
+# PeplinkAPI-Examples
 
 ## Running locally Bash on debian
 
