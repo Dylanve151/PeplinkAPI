@@ -93,7 +93,7 @@ if [ "${server_type}" == "device" ]; then
                         echo "Returned: $result"
                         exit 3
                 fi
-                # Save the access token and refresh token."
+                # Save the access token."
                 echo ${access_token_tmp} > ${access_token_file}
                 # Set the files' last modified date to the tokens' expiry date
                 touch -d @$(( $(date +%s) + expires_in )) ${access_token_file}
