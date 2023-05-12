@@ -2,6 +2,7 @@
 
 ## Running locally Bash on debian
 
+### Install requirements
 ```bash
 sudo apt-get update
 sudo apt-get install -y curl jq
@@ -13,8 +14,9 @@ sudo apt-get install -y curl jq
 
 ## Running locally Python
 
+### Install requirements
 ```bash
-pip install 
+pip install -r ./python/requirements.txt
 ```
 
 ```bash
