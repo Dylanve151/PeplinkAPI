@@ -19,7 +19,7 @@ Copy `.env.example` to `.env` and replace variables in the file
 * server_type=**device** or **ic2** (Default: **ic2** when using incontrol2 api. **device** when using device api.)
 * server_prefix=By default https://api.ic.peplink.com for use with https://incontrol2.peplink.com
 
-### Required IC2:
+### Required Device:
 * client_id=
 * client_secret=
 * server_prefix=By default https://api.ic.peplink.com for use with https://incontrol2.peplink.com
