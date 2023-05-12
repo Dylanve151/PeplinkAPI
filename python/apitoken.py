@@ -33,7 +33,7 @@ if server_prefix == None:
 
 
 if redirect_uri == None:
-    redirect_uri = "http://peplink.com"
+    redirect_uri = "http://www.peplink.com"
 
 
 # For InControl 2, set 1 to verify the API service's SSL certificate.
@@ -53,7 +53,7 @@ else:
     #incontrol2 token endpoint
     grant_token_url = server_prefix + '/api/oauth2/token'
     #incontrol2 authorization endpoint
-    ic2_auth_url = server_prefix + '/api/oauth2/auth?client_id=' + client_id + '&response_type=code'
+    ic2_auth_url = server_prefix + '/api/oauth2/auth?client_id=' + client_id + '&redirect_uri=' + redirect_uri + '&response_type=code'
 
     if client_id == None or client_secret == None:
         print("Please enter Client ID and Client Secret")
@@ -72,7 +72,7 @@ if server_type == "device":
             expires_in = rjson["expiresIn"]
         else:
             print("Unable to obtain an access token. Process aborted")
-            print("Returned" + rqjson)
+            print("Returned: " + str(rqjson))
             exit(3)
         f = open(access_token_file, "w")
         f.write(access_token_tmp)
@@ -81,14 +81,14 @@ if server_type == "device":
 else:
     def save_tokens(*args):
         rqjson = json.loads(args[0])
-        if rqjson["stat"] == 'ok':
+        if args[1] == 200:
             rjson = rqjson
             access_token_tmp = rjson["access_token"]
             refresh_token_tmp = rjson["refresh_token"]
-            expires_in = rjson["expiresIn"]
+            expires_in = rjson["expires_in"]
         else:
             print("Unable to obtain an access token. Process aborted")
-            print("Returned" + rqjson)
+            print("Returned: " + str(rqjson))
             exit(3)
         f = open(access_token_file, "w")
         f.write(access_token_tmp)
@@ -100,18 +100,19 @@ else:
         os.utime(refresh_token_file, ((time.time() + expires_in + (30*60*60)), (time.time() + expires_in + (30*60*60))))
 
 if os.path.isfile(access_token_file):
-    if os.path.getctime(access_token_file) > (time.time() + (6*60)):
+    if os.path.getmtime(access_token_file) > (time.time() + (6*60)):
         access_token = open(access_token_file, "r").read()
     elif os.path.isfile(refresh_token_file):
-        if os.path.getctime(refresh_token_file) > (time.time() + (6*60)):
+        if os.path.getmtime(refresh_token_file) > (time.time() + (6*60)):
             refresh_token = open(refresh_token_file, "r").read()
-            #grant_token_params = 'client_id=' + client_id + '&client_secret=' + client_secret + '&grant_type=refresh_token&refresh_token=' + refresh_token
-            grant_token_json = {'client_id': client_id, 'client_secret': client_secret, 'grant_type': 'refresh_token', 'refresh_token': refresh_token}
-            tmpresponse = requests.post(grant_token_url, json = grant_token_json, verify = verify_ssl_cert)
-            save_tokens(tmpresponse.text)
+            grant_token_params = '?client_id=' + client_id + '&client_secret=' + client_secret + '&grant_type=refresh_token&refresh_token=' + refresh_token
+            tmpresponse = requests.post((grant_token_url + grant_token_params), verify = verify_ssl_cert, headers = {'Content-type': 'application/x-www-form-urlencoded'})
+            save_tokens(tmpresponse.text, tmpresponse.status_code)
         else:
             os.remove(access_token_file)
             os.remove(refresh_token_file)
+    else:
+        os.remove(access_token_file)
 
 if not os.path.isfile(access_token_file):
     if grant_type == "authorization_code" and server_type != "device":
@@ -120,19 +121,18 @@ if not os.path.isfile(access_token_file):
         print("")
         print(ic2_auth_url)
         print("")
-        print("You will be redirected to" + redirect_uri + "?code=CODE_HERE")
+        print("You will be redirected to " + redirect_uri + "?code=CODE_HERE")
         code = input('Please enter the \'code\' in the redirected URL here:\n')
 
         if code == None:
             print("Error: The code is empty.  Process aborted")
             exit(5)
 
-        grant_token_json = {'client_id': client_id, 'client_secret': client_secret, 'grant_type': 'authorization_code', 'code': code, 'redirect_uri': redirect_uri}
+        grant_token_params = '?client_id=' + client_id + '&client_secret=' + client_secret + '&grant_type=authorization_code&code=' + code + '&redirect_uri='+ redirect_uri
     else:
         if server_type == "device":
-            grant_token_json = {'clientId': client_id, 'clientSecret': client_secret, 'scope': 'api'}
+            grant_token_params = '?clientId=' + client_id + '&clientSecret=' + client_secret + '&scope=api'
         else:
-            grant_token_json = {'client_id': client_id, 'client_secret': client_secret, 'grant_type': 'client_credentials'}
-    
-    tmpresponse = requests.post(grant_token_url, json = grant_token_json, verify = verify_ssl_cert)
-    save_tokens(tmpresponse.text)
+            grant_token_params = '?client_id=' + client_id + '&client_secret=' + client_secret + '&grant_type=client_credentials'
+    tmpresponse = requests.post((grant_token_url + grant_token_params), verify = verify_ssl_cert, headers = {'Content-type': 'application/x-www-form-urlencoded'})
+    save_tokens(tmpresponse.text, tmpresponse.status_code)
