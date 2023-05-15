@@ -8,4 +8,4 @@ loginresponse=$(curl -k -c /tmp/cookies.txt -H "Content-Type: application/json" 
 
 clientresponse=$(curl -k -b /tmp/cookies.txt -H "Content-Type: application/json" -X POST -d '{"action":"add","name":"Client2","scope":"api"}' ${server_prefix}/api/auth.client)
 
-echo $clientresponse
+echo $clientresponse | jq -r .response

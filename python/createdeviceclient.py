@@ -2,6 +2,7 @@
 
 import os
 import requests
+import json
 
 from dotenv import load_dotenv
 
@@ -22,4 +23,5 @@ loginresponse = requests.post((admin_login_url + admin_login_params), verify = v
 client_create_params = '?action=' + 'add' + '&name=' + 'Client2' + '&scope=' + 'api'
 tmpresponse = requests.post((client_create_url + client_create_params), verify = verify_ssl_cert, headers = {'Content-type': 'application/x-www-form-urlencoded'}, cookies = loginresponse.cookies)
 
-print(tmpresponse.text)
+rqjson = json.loads(tmpresponse.text)
+rqjson["response"]
