@@ -25,7 +25,7 @@ billingcycle_params="&connId=${connid}&simId=${simid}"
 sendsms_params="&connId=${connid}&address=${smsnumber}&content=${smsmessage}"
 
 echo "Checking monthly allowance..."
-curl $curl_opt -so $tmpfile --data "${token_params}" "${api_server_prefix}/api/status.wan.connection.allowance"
+curl $curl_opt -so $tmpfile --data "${token_params}" "${server_prefix}/api/status.wan.connection.allowance"
 
 if grep -q Unauthorized $tmpfile ; then
       echo "The saved access token is invalid."
@@ -38,12 +38,12 @@ percentusage=$(jq -r ".response.\"${connid}\".\"${simid}\".percent" $tmpfile)
 if [ "${percentusage}" -gt "${percentage}" ] ; then
 	echo "Monthly allowance more then ${percentage}% used"
 	for ((n=0;n<"${repeatsms}";n++)); do
-		curl $curl_opt -so $tmpfile --data "${token_params}${sendsms_params}" "${api_server_prefix}/api/cmd.sms.sendMessage"
+		curl $curl_opt -so $tmpfile --data "${token_params}${sendsms_params}" "${server_prefix}/api/cmd.sms.sendMessage"
 	done
 	stat=$(jq -r ".stat" $tmpfile)
 	if [ "${stat}" == "ok" ] ; then
 		echo "SMS has been send"
-		curl $curl_opt -so $tmpfile --data "${token_params}${billingcycle_params}" "${api_server_prefix}/api/cmd.billing.newCycle"
+		curl $curl_opt -so $tmpfile --data "${token_params}${billingcycle_params}" "${server_prefix}/api/cmd.billing.newCycle"
 		stat=$(jq -r ".stat" $tmpfile)
 		if [ "${stat}" == "ok" ] ; then
 			echo "Billing cycle has been reset"

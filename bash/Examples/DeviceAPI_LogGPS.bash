@@ -5,20 +5,21 @@
 export $(cat .env)
 
 # please change these variables
-templogfile=./gpslog.csv
+templogfile="${HOME}/gpslog.csv"
 
 ## Token file
 access_token_file="${HOME}/.access_token"
 access_token=$(cat ${access_token_file})
 
 tmpfile="/tmp/ic2.tmpfile.$$"
+touch $tmpfile
 
 curl_opt=" -k "
 
 echo "Logging GPS..."
 
 token_params="accessToken=${access_token}"
-curl $curl_opt -so $tmpfile --data "${token_params}" "${api_server_prefix}/api/info.location"
+curl $curl_opt -so $tmpfile --data "${token_params}" "${server_prefix}/api/info.location"
 reqstat=$(jq -r '.stat' $tmpfile)
 if grep -q Unauthorized $tmpfile ; then
 	echo "The saved access token is invalid."

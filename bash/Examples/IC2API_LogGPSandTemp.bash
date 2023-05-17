@@ -15,15 +15,15 @@ access_token=$(cat ${access_token_file})
 
 tmpfile="/tmp/ic2.tmpfile.$$"
 
-if [ -z "$api_server_prefix" ]
+if [ -z "$server_prefix" ]
 then
-        api_server_prefix="https://api.ic.peplink.com"
+        server_prefix="https://api.ic.peplink.com"
 fi
 
 
 echo "Logging temp"
 
-curl $curl_opt -so $tmpfile "${api_server_prefix}/rest/o/${org_id}/d/${device_id}?access_token=${access_token}"
+curl $curl_opt -so $tmpfile "${server_prefix}/rest/o/${org_id}/d/${device_id}?access_token=${access_token}"
 if grep -q Unauthorized $tmpfile ; then
       echo "The saved access token is invalid.  Rerun this script to obtain a new one"
       rm -f ${access_token_file}

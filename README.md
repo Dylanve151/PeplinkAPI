@@ -47,6 +47,9 @@ Copy `.env.example` to `.env` and replace variables in the file
 * admin_pass=Admin password for webhui login. (Only needed for creating client ID + client secret.)
 * server_type=**device** or **ic2** (Default: **ic2** when using incontrol2 api. **device** when using device api.)
 
+
+## Issues
+* send sms doesn't seem to work anymore...
 <!--
 ## Running in Docker
 
