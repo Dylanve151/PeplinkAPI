@@ -43,7 +43,7 @@ with open(gpslogfile, 'a', encoding='UTF8', newline='') as CSVfile:
         if system_ts < int(time.time()):
             info_location_response = requests.get((info_location_url + "?accessToken=" + access_token), verify = verify_ssl_cert)
             system_ts = int(time.time())
-
+            
             rqjson = json.loads(info_location_response.text)
             if rqjson["stat"] == 'ok':
                 if rqjson["response"]["gps"] == True:
@@ -65,5 +65,3 @@ with open(gpslogfile, 'a', encoding='UTF8', newline='') as CSVfile:
                 print("Failed")
                 print(info_location_response.text)
                 exit(1)
-
-
