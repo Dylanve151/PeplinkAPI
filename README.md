@@ -41,6 +41,7 @@ Copy `.env.example` to `.env` and replace variables in the file
 * client_secret=
 * server_prefix=Use IP address or hostname of device with http:// or https:// leading (By default https://api.ic.peplink.com for use with https://incontrol2.peplink.com)
 * server_type=**device** (Default: **ic2** when using incontrol2 api. **device** when using device api.)
+* wan_id=WAN id of the interface. used when logging data for a specific WAN
 
 ### Optional Device API:
 * admin_user=Admin username for webgui login. (Only needed for creating client ID + client secret.)
