@@ -12,6 +12,7 @@ access_token_file="${HOME}/.access_token"
 access_token=$(cat ${access_token_file})
 
 tmpfile="/tmp/ic2.tmpfile.$$"
+
 touch $tmpfile
 
 curl_opt=" -k "
@@ -19,7 +20,8 @@ curl_opt=" -k "
 echo "Logging GPS..."
 
 token_params="accessToken=${access_token}"
-curl $curl_opt -so $tmpfile --data "${token_params}" "${server_prefix}/api/info.location"
+
+curl $curl_opt -so $tmpfile --data "${token_params}" -X GET "${server_prefix}/api/info.location"
 reqstat=$(jq -r '.stat' $tmpfile)
 if grep -q Unauthorized $tmpfile ; then
 	echo "The saved access token is invalid."
@@ -52,5 +54,6 @@ if [ "${gpsstat}" == "true" ] ; then
 	echo ${csvdata} >> $templogfile
 else
 	echo "No GPS"
+	jq -r '.' $tmpfile
 fi
 rm -f $tmpfile
